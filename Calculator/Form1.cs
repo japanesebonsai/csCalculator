@@ -1,7 +1,10 @@
 ﻿namespace Calculator
 {
+    
     public partial class Calculator : Form
     {
+        const string DIVBYZERO = "Cannot divide by zero";
+
         private double firstValue = 0;
         private string operation = "";
         private double lastSecondValue = 0;
@@ -16,7 +19,7 @@
         {
             Button btn = (Button)sender;
 
-            if (lblInput.Text == "0" || string.IsNullOrWhiteSpace(lblInput.Text) || lblHistory.Text.EndsWith("="))
+            if (lblInput.Text == "0" || string.IsNullOrWhiteSpace(lblInput.Text) || lblHistory.Text.EndsWith("=") || lblInput.Text == DIVBYZERO)
             {
                 lblInput.Text = btn.Text;
                 if (lblHistory.Text.EndsWith("=")) lblHistory.Text = "";
@@ -41,6 +44,12 @@
 
         private void btnEqual_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(operation))
+            {
+                repeatEqual = false;
+                return;
+            }
+
             double secondValue;
 
             if (repeatEqual && !string.IsNullOrEmpty(operation))
@@ -74,7 +83,7 @@
                         result = firstValue / secondValue;
                     else
                     {
-                        lblInput.Text = "Cannot divide by zero";
+                        lblInput.Text = DIVBYZERO;
                         firstValue = 0;
                         lblHistory.Text = "";
                         operation = "";
@@ -122,7 +131,7 @@
                         }
                         else
                         {
-                            lblInput.Text = "Cannot divide by zero";
+                            lblInput.Text = DIVBYZERO;
                             firstValue = 0;
                             lblHistory.Text = "";
                             operation = "";
@@ -136,6 +145,8 @@
                 }
 
                 lblInput.Text = result.ToString();
+                repeatEqual = false;
+                operation = "";
             }
         }
 
